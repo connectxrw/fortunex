@@ -55,7 +55,6 @@ export const getAuthPosts = query({
             })
           : null;
 
-        // check if i have saved this post
         const saved = await ctx.db
           .query("savedPosts")
           .withIndex("by_postId_userId", (q) =>
@@ -63,13 +62,19 @@ export const getAuthPosts = query({
           )
           .first();
 
-        // check if i have liked this post
         const liked = await ctx.db
           .query("likedPosts")
           .withIndex("by_postId_userId", (q) =>
             q.eq("postId", post._id).eq("userId", user._id)
           )
           .first();
+
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
 
         const postBusiness = {
           name: business?.name,
@@ -88,6 +93,7 @@ export const getAuthPosts = query({
           isMine: post.userId === user._id,
           saved: saved !== null,
           liked: liked !== null,
+          likesCount,
         };
       })
     );
@@ -137,7 +143,6 @@ export const searchAuthPosts = query({
             })
           : null;
 
-        // check if i have saved this post
         const saved = await ctx.db
           .query("savedPosts")
           .withIndex("by_postId_userId", (q) =>
@@ -145,13 +150,19 @@ export const searchAuthPosts = query({
           )
           .first();
 
-        // check if i have liked this post
         const liked = await ctx.db
           .query("likedPosts")
           .withIndex("by_postId_userId", (q) =>
             q.eq("postId", post._id).eq("userId", user._id)
           )
           .first();
+
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
 
         const postBusiness = {
           name: business?.name,
@@ -170,6 +181,7 @@ export const searchAuthPosts = query({
           isMine: post.userId === user._id,
           saved: saved !== null,
           liked: liked !== null,
+          likesCount,
         };
       })
     );
@@ -215,7 +227,6 @@ export const getMyPosts = query({
             })
           : null;
 
-        // check if i have saved this post
         const saved = await ctx.db
           .query("savedPosts")
           .withIndex("by_postId_userId", (q) =>
@@ -223,13 +234,19 @@ export const getMyPosts = query({
           )
           .first();
 
-        // check if i have liked this post
         const liked = await ctx.db
           .query("likedPosts")
           .withIndex("by_postId_userId", (q) =>
             q.eq("postId", post._id).eq("userId", user._id)
           )
           .first();
+
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
 
         const postBusiness = {
           name: business?.name,
@@ -246,6 +263,7 @@ export const getMyPosts = query({
           isMine: post.userId === user._id,
           saved: saved !== null,
           liked: liked !== null,
+          likesCount,
         };
       })
     );
@@ -303,6 +321,13 @@ export const getAuthPostBySlug = query({
       )
       .first();
 
+    const likesCount = (
+      await ctx.db
+        .query("likedPosts")
+        .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+        .collect()
+    ).length;
+
     const postBusiness = {
       name: business?.name,
       handle: business?.handle,
@@ -310,6 +335,7 @@ export const getAuthPostBySlug = query({
       category: business?.category,
       followersCount: business?.followersCount,
       logo,
+      openingHours: business?.openingHours,
     };
     return {
       ...post,
@@ -317,6 +343,7 @@ export const getAuthPostBySlug = query({
       postBusiness,
       saved: saved !== null,
       liked: liked !== null,
+      likesCount,
     };
   },
 });
@@ -329,7 +356,6 @@ export const toggleSavePost = mutation({
   handler: async (ctx, { postId, saved }) => {
     const user = await authComponent.getAuthUser(ctx);
 
-    // 🔐 Auth errors → throw
     if (!user) {
       throw new ConvexError({
         code: "UNAUTHORIZED",
@@ -353,9 +379,6 @@ export const toggleSavePost = mutation({
       )
       .first();
 
-    /**
-     * 🔖 save post
-     */
     if (saved) {
       if (existing) {
         return {
@@ -376,9 +399,6 @@ export const toggleSavePost = mutation({
       };
     }
 
-    /**
-     * 🔖 Remove save
-     */
     if (!existing) {
       return {
         success: false,
@@ -404,7 +424,6 @@ export const toggleLikePost = mutation({
   handler: async (ctx, { postId, liked }) => {
     const user = await authComponent.getAuthUser(ctx);
 
-    // 🔐 Auth errors → throw
     if (!user) {
       throw new ConvexError({
         code: "UNAUTHORIZED",
@@ -428,9 +447,6 @@ export const toggleLikePost = mutation({
       )
       .first();
 
-    /**
-     * 🔖 like post
-     */
     if (liked) {
       if (existing) {
         return {
@@ -451,9 +467,6 @@ export const toggleLikePost = mutation({
       };
     }
 
-    /**
-     * 🔖 Remove like
-     */
     if (!existing) {
       return {
         success: false,

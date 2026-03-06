@@ -25,6 +25,7 @@ export type TBusiness = {
   logo: string | null;
   latitude?: number | null;
   longitude?: number | null;
+  openingHours?: { day: string; open?: string; close?: string; closed: boolean }[];
 };
 
 export type TChatPost = Doc<"post"> & { score?: number } & {

@@ -25,6 +25,7 @@ import type * as helpers_index from "../helpers/index.js";
 import type * as helpers_slug from "../helpers/slug.js";
 import type * as http from "../http.js";
 import type * as notification from "../notification.js";
+import type * as public_business from "../public/business.js";
 import type * as public_post from "../public/post.js";
 import type * as uploadFiles from "../uploadFiles.js";
 import type * as user_follow from "../user/follow.js";
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   "helpers/slug": typeof helpers_slug;
   http: typeof http;
   notification: typeof notification;
+  "public/business": typeof public_business;
   "public/post": typeof public_post;
   uploadFiles: typeof uploadFiles;
   "user/follow": typeof user_follow;

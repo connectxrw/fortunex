@@ -1,16 +1,16 @@
+"use client";
+
 import { useMutation } from "convex/react";
 import { ConvexError } from "convex/values";
 import {
-  ArrowDownToLineIcon,
-  ArrowUpFromLineIcon,
   ArrowUpRightIcon,
-  EllipsisVerticalIcon,
+  BookmarkIcon,
+  EllipsisIcon,
   FlagIcon,
+  HeartIcon,
   PenIcon,
   Redo2Icon,
   Share2Icon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
   TrashIcon,
   Undo2Icon,
 } from "lucide-react";
@@ -45,59 +45,88 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { useFilters } from "@/lib/nuqs-params";
+import { cn } from "@/lib/utils";
 import type { TBusiness } from "@/types";
 import { ReportPostDialog } from "../report";
 
-export function AuthPostCardActions({
-  post,
-}: {
-  post: Doc<"post"> & {
-    coverImages: { key: string; url: string }[];
-    postBusiness: TBusiness;
-    isMine: boolean;
-    saved: boolean;
-    liked: boolean;
-  };
-}) {
-  const [{ post: currentPost }, setSearchParams] = useFilters();
-  const toggleSave = useMutation(api.user.post.toggleSavePost);
+type PostWithMeta = Doc<"post"> & {
+  coverImages: { key: string; url: string }[];
+  postBusiness: TBusiness;
+  isMine: boolean;
+  saved: boolean;
+  liked: boolean;
+  likesCount: number;
+};
+
+// ─── Like Button ─────────────────────────────────────────────────────────────
+
+export function AuthLikeButton({ post }: { post: PostWithMeta }) {
   const toggleLike = useMutation(api.user.post.toggleLikePost);
-  const updatePostStatus = useMutation(api.business.post.updatePostStatus);
+  const [isLiking, setIsLiking] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openReportDialog, setOpenReportDialog] = useState(false);
-
-  const handleUpdatePostStatus = async (status: "published" | "draft") => {
+  const handleToggleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
-      setIsLoading(true);
-      const result = await updatePostStatus({
-        id: post._id,
-        status,
+      setIsLiking(true);
+      const result = await toggleLike({
+        postId: post._id,
+        liked: !post.liked,
       });
-      toast.success(`Post status updated to ${result.status}`);
+      if (!result.success) {
+        toast.error(result.message);
+      }
     } catch (error) {
-      console.error(error);
       if (error instanceof ConvexError) {
-        toast.error(error.data.message || "Failed to update post status");
+        toast.error(error.data.message || "Failed to like post");
       } else {
         toast.error(
-          error instanceof Error
-            ? error.message
-            : "Failed to update post status",
+          error instanceof Error ? error.message : "Failed to like post"
         );
       }
     } finally {
-      setIsLoading(false);
+      setIsLiking(false);
     }
   };
 
-  const handleToggleSave = async () => {
+  return (
+    <button
+      aria-label={post.liked ? "Unlike" : "Like"}
+      className={cn(
+        "absolute top-2 right-2 z-20 flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition-colors hover:bg-black/60"
+      )}
+      onClick={handleToggleLike}
+      type="button"
+    >
+      {isLiking ? (
+        <Spinner className="size-4 text-white" />
+      ) : (
+        <HeartIcon
+          className={cn(
+            "size-4 transition-colors",
+            post.liked
+              ? "fill-red-400 text-red-400"
+              : "fill-white/20 text-white"
+          )}
+        />
+      )}
+    </button>
+  );
+}
+
+// ─── Save Button ──────────────────────────────────────────────────────────────
+
+export function AuthSaveButton({ post }: { post: PostWithMeta }) {
+  const toggleSave = useMutation(api.user.post.toggleSavePost);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleToggleSave = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
-      setIsLoading(true);
+      setIsSaving(true);
       const result = await toggleSave({
         postId: post._id,
         saved: !post.saved,
@@ -108,38 +137,60 @@ export function AuthPostCardActions({
         toast.error(result.message);
       }
     } catch (error) {
-      console.error(error);
       if (error instanceof ConvexError) {
         toast.error(error.data.message || "Failed to save post");
       } else {
         toast.error(
-          error instanceof Error ? error.message : "Failed to save post",
+          error instanceof Error ? error.message : "Failed to save post"
         );
       }
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  const handleToggleLike = async () => {
+  return (
+    <button
+      aria-label={post.saved ? "Unsave" : "Save"}
+      className="flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90 disabled:opacity-60"
+      disabled={isSaving}
+      onClick={handleToggleSave}
+      type="button"
+    >
+      {isSaving ? (
+        <Spinner className="size-4 text-white" />
+      ) : (
+        <BookmarkIcon
+          className={cn(
+            "size-4 transition-colors",
+            post.saved ? "fill-black text-black" : "text-black"
+          )}
+        />
+      )}
+    </button>
+  );
+}
+
+// ─── More Button (dropdown / drawer) ─────────────────────────────────────────
+
+export function AuthMoreButton({ post }: { post: PostWithMeta }) {
+  const [{ post: currentPost }, setSearchParams] = useFilters();
+  const updatePostStatus = useMutation(api.business.post.updatePostStatus);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openReportDialog, setOpenReportDialog] = useState(false);
+
+  const handleUpdatePostStatus = async (status: "published" | "draft") => {
     try {
       setIsLoading(true);
-      const result = await toggleLike({
-        postId: post._id,
-        liked: !post.liked,
-      });
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
+      const result = await updatePostStatus({ id: post._id, status });
+      toast.success(`Post status updated to ${result.status}`);
     } catch (error) {
-      console.error(error);
       if (error instanceof ConvexError) {
-        toast.error(error.data.message || "Failed to like post");
+        toast.error(error.data.message || "Failed to update post status");
       } else {
         toast.error(
-          error instanceof Error ? error.message : "Failed to like post",
+          error instanceof Error ? error.message : "Failed to update post status"
         );
       }
     } finally {
@@ -162,15 +213,16 @@ export function AuthPostCardActions({
 
   return (
     <>
+      {/* Desktop dropdown */}
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="hidden rounded-full lg:flex"
-            size="icon-sm"
-            variant="ghost"
+          <button
+            aria-label="More options"
+            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
+            type="button"
           >
-            <EllipsisVerticalIcon />
-          </Button>
+            <EllipsisIcon className="size-4" />
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52" side="right">
           <DropdownMenuGroup>
@@ -184,41 +236,16 @@ export function AuthPostCardActions({
               <Redo2Icon className="rotate-180" />
               <span>{currentPost === post.slug ? "Close" : "Open"}</span>
             </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            {post.saved ? (
-              <DropdownMenuItem disabled={isLoading} onClick={handleToggleSave}>
-                <ArrowUpFromLineIcon />
-                <span>Unsave</span>
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem disabled={isLoading} onClick={handleToggleSave}>
-                <ArrowDownToLineIcon />
-                <span>Save</span>
-              </DropdownMenuItem>
-            )}
-            {post.liked ? (
-              <DropdownMenuItem disabled={isLoading} onClick={handleToggleLike}>
-                <ThumbsDownIcon />
-                <span>Unlike</span>
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem disabled={isLoading} onClick={handleToggleLike}>
-                <ThumbsUpIcon />
-                <span>Like</span>
-              </DropdownMenuItem>
-            )}
-            {/* share */}
             <DropdownMenuItem disabled={isLoading} onClick={handleShare}>
               <Share2Icon />
               <span>Share</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            {post.isMine ? (
-              <>
+
+          {post.isMine && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
                   <Link href={`/posts/edit/${post.slug}`}>
                     <PenIcon />
@@ -227,6 +254,7 @@ export function AuthPostCardActions({
                 </DropdownMenuItem>
                 {post.status === "published" ? (
                   <DropdownMenuItem
+                    disabled={isLoading}
                     onClick={() => handleUpdatePostStatus("draft")}
                   >
                     <Undo2Icon />
@@ -234,6 +262,7 @@ export function AuthPostCardActions({
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem
+                    disabled={isLoading}
                     onClick={() => handleUpdatePostStatus("published")}
                   >
                     <ArrowUpRightIcon />
@@ -244,8 +273,12 @@ export function AuthPostCardActions({
                   <TrashIcon />
                   <span>Delete</span>
                 </DropdownMenuItem>
-              </>
-            ) : null}
+              </DropdownMenuGroup>
+            </>
+          )}
+
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
             <DropdownMenuItem onSelect={() => setOpenReportDialog(true)}>
               <FlagIcon />
               <span>Report</span>
@@ -254,15 +287,16 @@ export function AuthPostCardActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Mobile drawer */}
       <Drawer>
         <DrawerTrigger asChild>
-          <Button
-            className="rounded-full lg:hidden"
-            size="icon-sm"
-            variant="ghost"
+          <button
+            aria-label="More options"
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
+            type="button"
           >
-            <EllipsisVerticalIcon />
-          </Button>
+            <EllipsisIcon className="size-4" />
+          </button>
         </DrawerTrigger>
         <DrawerContent className="rounded-t-md!">
           <DrawerHeader className="sr-only">
@@ -279,37 +313,6 @@ export function AuthPostCardActions({
                   : setSearchParams({ post: post.slug })
               }
             />
-
-            {post.saved ? (
-              <DrawerButton
-                disabled={isLoading}
-                icon={<ArrowUpFromLineIcon className="size-4" />}
-                label="Unsave"
-                onClick={handleToggleSave}
-              />
-            ) : (
-              <DrawerButton
-                disabled={isLoading}
-                icon={<ArrowDownToLineIcon className="size-4" />}
-                label="Save"
-                onClick={handleToggleSave}
-              />
-            )}
-            {post.liked ? (
-              <DrawerButton
-                disabled={isLoading}
-                icon={<ThumbsDownIcon className="size-4" />}
-                label="Unlike"
-                onClick={handleToggleLike}
-              />
-            ) : (
-              <DrawerButton
-                disabled={isLoading}
-                icon={<ThumbsUpIcon className="size-4" />}
-                label="Like"
-                onClick={handleToggleLike}
-              />
-            )}
             <DrawerButton
               disabled={isLoading}
               icon={<Share2Icon className="size-4" />}
@@ -318,16 +321,12 @@ export function AuthPostCardActions({
             />
           </div>
 
-          {post.isMine ? (
+          {post.isMine && (
             <div className="flex flex-col gap-4 border-b p-4">
-              <Link
-                className="flex items-center gap-2"
-                href={`/posts/edit/${post.slug}`}
-              >
+              <Link className="flex items-center gap-2" href={`/posts/edit/${post.slug}`}>
                 <PenIcon className="size-4" />
                 <span>Edit</span>
               </Link>
-
               {post.status === "published" ? (
                 <DrawerButton
                   disabled={isLoading}
@@ -350,7 +349,7 @@ export function AuthPostCardActions({
                 onClick={() => setOpenDeleteDialog(true)}
               />
             </div>
-          ) : null}
+          )}
 
           <div className="flex flex-col gap-4 p-4">
             <DrawerButton
@@ -382,6 +381,8 @@ export function AuthPostCardActions({
   );
 }
 
+// ─── Delete Dialog ────────────────────────────────────────────────────────────
+
 export function DeletePostAlertDialog({
   postId,
   postTitle,
@@ -395,6 +396,7 @@ export function DeletePostAlertDialog({
 }) {
   const deletePost = useMutation(api.business.post.deletePost);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleDeletePost = async () => {
     try {
       setIsLoading(true);
@@ -402,12 +404,11 @@ export function DeletePostAlertDialog({
       toast.success("Post deleted successfully");
       setOpen(false);
     } catch (error) {
-      console.error(error);
       if (error instanceof ConvexError) {
         toast.error(error.data.message || "Failed to delete post");
       } else {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete post",
+          error instanceof Error ? error.message : "Failed to delete post"
         );
       }
     } finally {
@@ -415,6 +416,7 @@ export function DeletePostAlertDialog({
       setOpen(false);
     }
   };
+
   return (
     <AlertDialog onOpenChange={setOpen} open={open}>
       <AlertDialogContent className="lg:min-w-lg">

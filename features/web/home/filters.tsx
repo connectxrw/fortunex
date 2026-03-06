@@ -21,13 +21,15 @@ export default function FilterBtns({
   page: "home" | "my-posts";
   by: "category" | "status";
 }) {
-  const [{ category, status, subcategory, nearMe }, setSearchParams] =
+  const [{ category, status, subcategory, nearMe, view }, setSearchParams] =
     useFilters();
   const { clearLocation } = useNearMe();
   const filters = page === "home" ? homeFilters : myPostFilters;
 
   const activeSubs =
-    page === "home" ? (subcategoryFilters[category] ?? []) : [];
+    page === "home" && view !== "merchants"
+      ? (subcategoryFilters[category] ?? [])
+      : [];
   const hasSubcategories = activeSubs.length > 0;
 
   const handleCategoryClick = (value: string) => {

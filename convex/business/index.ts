@@ -41,7 +41,12 @@ export const addBusiness = mutation({
 export const getMyBusiness = query({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx);
+    let user;
+    try {
+      user = await authComponent.getAuthUser(ctx);
+    } catch {
+      return { success: false, data: null };
+    }
     if (!user || user.accountType !== "business") {
       return {
         success: false,
@@ -512,6 +517,45 @@ export const updateBusinessCoordinates = mutation({
     await ctx.db.patch("business", business._id, {
       latitude: args.latitude,
       longitude: args.longitude,
+      updatedAt: Date.now(),
+    });
+    return { success: true };
+  },
+});
+
+export const updateBusinessHours = mutation({
+  args: {
+    openingHours: v.array(
+      v.object({
+        day: v.union(
+          v.literal("monday"),
+          v.literal("tuesday"),
+          v.literal("wednesday"),
+          v.literal("thursday"),
+          v.literal("friday"),
+          v.literal("saturday"),
+          v.literal("sunday"),
+        ),
+        open: v.optional(v.string()),
+        close: v.optional(v.string()),
+        closed: v.boolean(),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const user = await authComponent.getAuthUser(ctx);
+    if (!user) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Unauthorized" });
+    }
+    const business = await ctx.db
+      .query("business")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .first();
+    if (!business || business.userId !== user._id) {
+      throw new ConvexError({ code: "NOT_FOUND", message: "Business not found" });
+    }
+    await ctx.db.patch("business", business._id, {
+      openingHours: args.openingHours,
       updatedAt: Date.now(),
     });
     return { success: true };

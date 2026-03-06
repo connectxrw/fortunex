@@ -7,6 +7,7 @@ import { SiteHeader } from "@/features/web/_shared/site-header";
 import FilterBtns from "@/features/web/home/filters";
 import { NearMeFloatingButton } from "@/features/web/home/near-me-button";
 import HomePosts from "@/features/web/home/posts";
+import { ViewTabs } from "@/features/web/home/view-tabs";
 import PostsSkeleton from "@/features/web/post/skeleton";
 
 export async function generateMetadata(props: PageProps<"/">) {
@@ -64,6 +65,12 @@ export default function WorkspacePage() {
       </Suspense>
       <Container className="pt-0 pb-10 md:pt-0">
         <div className="flex flex-col gap-3">
+          <Suspense>
+            <ViewTabs />
+          </Suspense>
+          <Suspense>
+            <FilterBtns by="category" page="home" />
+          </Suspense>
           <Suspense fallback={<PostsSkeleton />}>
             <HomePosts />
           </Suspense>

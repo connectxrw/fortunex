@@ -31,8 +31,29 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { useFilters } from "@/lib/nuqs-params";
-import { getUserInitials } from "@/lib/utils";
+import { cn, getUserInitials } from "@/lib/utils";
 import type { TBusiness } from "@/types";
+
+const HOURS_CATEGORIES = ["restaurant", "tourism"];
+
+function getOpenStatus(
+  openingHours: TBusiness["openingHours"],
+  category: string | undefined,
+): boolean | null {
+  if (!category || !HOURS_CATEGORIES.includes(category)) return null;
+  if (!openingHours?.length) return null;
+  const DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const now = new Date();
+  const dayName = DAYS[now.getDay()];
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+  const currentTime = `${hh}:${mm}`;
+  const todayHours = openingHours.find((h) => h.day === dayName);
+  if (!todayHours) return null;
+  if (todayHours.closed) return false;
+  if (!todayHours.open || !todayHours.close) return null;
+  return currentTime >= todayHours.open && currentTime <= todayHours.close;
+}
 import { ExpandableText } from "../_shared/expand-texts";
 import { EmptyPosts } from "../post/empty";
 import { PostMediaCard } from "../post/media-card";
@@ -120,6 +141,8 @@ export function AuthPanelContent({ slug }: { slug: string }) {
       setIsLoading(false);
     }
   };
+  const openStatus = getOpenStatus(post.postBusiness.openingHours, post.postBusiness.category);
+
   return (
     <>
       <Link
@@ -152,6 +175,14 @@ export function AuthPanelContent({ slug }: { slug: string }) {
 
           <p className="text-muted-foreground text-xs md:text-xs">
             {post.postBusiness.followersCount || 0} Followers
+            {openStatus !== null && (
+              <>
+                <span className="mx-1 opacity-40">·</span>
+                <span className={cn("font-medium", openStatus ? "text-emerald-600" : "text-muted-foreground")}>
+                  {openStatus ? "Open" : "Closed"}
+                </span>
+              </>
+            )}
           </p>
         </div>
         <Button className="ml-auto rounded-full">Visit Page</Button>

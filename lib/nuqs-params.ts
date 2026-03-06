@@ -26,6 +26,7 @@ const searchParams = {
   subcategory: parseAsString.withDefault(""),
   status: parseAsString.withDefault("all"),
   post: parseAsString.withDefault(""),
+  view: parseAsString.withDefault("products"),
   ai: parseAsBoolean.withDefault(false),
   nearMe: parseAsBoolean.withDefault(false),
   preview: parseAsJson(schema).withDefault({
