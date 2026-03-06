@@ -335,6 +335,7 @@ export const getAuthPostBySlug = query({
       category: business?.category,
       followersCount: business?.followersCount,
       logo,
+      openingHours: business?.openingHours,
     };
     return {
       ...post,

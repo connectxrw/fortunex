@@ -48,7 +48,6 @@ export default function PageTop({ handle }: { handle: string }) {
           {business.profileImageUrl ? (
             <Avatar className="size-20 lg:size-38">
               <AvatarImage
-                className="dark:invert"
                 src={business.profileImageUrl || profileImg.src}
               />
               <AvatarFallback>

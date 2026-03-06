@@ -108,7 +108,7 @@ export function AuthLikeButton({ post }: { post: PostWithMeta }) {
           className={cn(
             "size-4 transition-colors",
             post.liked
-              ? "fill-red-500 text-red-500"
+              ? "fill-red-400 text-red-400"
               : "fill-white/20 text-white"
           )}
         />
@@ -152,7 +152,7 @@ export function AuthSaveButton({ post }: { post: PostWithMeta }) {
   return (
     <button
       aria-label={post.saved ? "Unsave" : "Save"}
-      className="flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60 disabled:opacity-60"
+      className="flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90 disabled:opacity-60"
       disabled={isSaving}
       onClick={handleToggleSave}
       type="button"
@@ -163,7 +163,7 @@ export function AuthSaveButton({ post }: { post: PostWithMeta }) {
         <BookmarkIcon
           className={cn(
             "size-4 transition-colors",
-            post.saved ? "fill-white text-white" : "text-white"
+            post.saved ? "fill-black text-black" : "text-black"
           )}
         />
       )}
@@ -218,7 +218,7 @@ export function AuthMoreButton({ post }: { post: PostWithMeta }) {
         <DropdownMenuTrigger asChild>
           <button
             aria-label="More options"
-            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
             type="button"
           >
             <EllipsisIcon className="size-4" />
@@ -292,7 +292,7 @@ export function AuthMoreButton({ post }: { post: PostWithMeta }) {
         <DrawerTrigger asChild>
           <button
             aria-label="More options"
-            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
             type="button"
           >
             <EllipsisIcon className="size-4" />

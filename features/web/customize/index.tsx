@@ -15,6 +15,7 @@ import {
 import { BusinessSocialAccounts } from "./accounts";
 import { BusinessCategory } from "./category";
 import { BusinessCertificate } from "./certificate";
+import { BusinessHours } from "./hours";
 
 export default function Customize() {
   const business = useQuery(api.business.index.getMyBusiness);
@@ -58,6 +59,10 @@ export default function Customize() {
           longitude={business.data.longitude}
           phone={business.data.phone}
         />
+        {(business.data.category === "restaurant" ||
+          business.data.category === "tourism") && (
+          <BusinessHours openingHours={business.data.openingHours} />
+        )}
       </>
     );
   }

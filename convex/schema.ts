@@ -65,6 +65,26 @@ const applicationTables = {
     // Ownership
     userId: v.string(),
 
+    // Opening hours (applicable to restaurant, tourism, etc.)
+    openingHours: v.optional(
+      v.array(
+        v.object({
+          day: v.union(
+            v.literal("monday"),
+            v.literal("tuesday"),
+            v.literal("wednesday"),
+            v.literal("thursday"),
+            v.literal("friday"),
+            v.literal("saturday"),
+            v.literal("sunday"),
+          ),
+          open: v.optional(v.string()),  // "09:00"
+          close: v.optional(v.string()), // "22:00"
+          closed: v.boolean(),
+        }),
+      ),
+    ),
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),

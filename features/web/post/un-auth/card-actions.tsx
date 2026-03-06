@@ -59,7 +59,7 @@ export function UnAuthMoreButton({ post }: { post: PostWithMeta }) {
         <DropdownMenuTrigger asChild>
           <button
             aria-label="More options"
-            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
             type="button"
           >
             <EllipsisIcon className="size-4" />
@@ -94,7 +94,7 @@ export function UnAuthMoreButton({ post }: { post: PostWithMeta }) {
         <DrawerTrigger asChild>
           <button
             aria-label="More options"
-            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-colors hover:bg-white/90"
             type="button"
           >
             <EllipsisIcon className="size-4" />

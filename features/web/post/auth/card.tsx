@@ -25,6 +25,15 @@ type PostWithMeta = Doc<"post"> & {
   likesCount: number;
 };
 
+function stripHtml(html: string) {
+  return html.replace(/<[^>]*>/g, "");
+}
+
+function formatPrice(price: string): string {
+  const num = parseFloat(price.replace(/,/g, ""));
+  return isNaN(num) ? price : num.toLocaleString();
+}
+
 export function AuthPostCard({
   post,
   className,
@@ -42,7 +51,7 @@ export function AuthPostCard({
     setSearchParams({ post: currentPost === post.slug ? "" : post.slug });
 
   return (
-    <div className={cn("relative space-y-3", className)}>
+    <div className={cn("relative space-y-2.5", className)}>
       {/* ── Image area ── */}
       <div className="group relative overflow-hidden rounded-xl bg-muted">
         <PostMediaCard onClick={openPost} post={post} />
@@ -60,10 +69,7 @@ export function AuthPostCard({
 
         {/* Hover overlay: gradient + title + save/more */}
         <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          {/* gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-
-          {/* title + actions row at bottom */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between gap-2 p-3">
             <button
               className="pointer-events-auto line-clamp-2 text-left font-semibold text-sm text-white leading-snug"
@@ -72,7 +78,6 @@ export function AuthPostCard({
             >
               {post.title}
             </button>
-
             <div className="pointer-events-auto flex shrink-0 items-center gap-1.5">
               <AuthSaveButton post={post} />
               <AuthMoreButton post={post} />
@@ -81,37 +86,55 @@ export function AuthPostCard({
         </div>
       </div>
 
-      {/* ── Below image: avatar + business name | likes count ── */}
+      {/* ── Below image ── */}
       {showMore && (
-        <div className="flex items-center justify-between gap-2">
-          <Link
-            className="flex min-w-0 items-center gap-2"
-            href={`/b/${post.postBusiness.handle}`}
-          >
-            {post.postBusiness.logo ? (
-              <Avatar className="size-6 shrink-0">
-                <AvatarImage src={post.postBusiness.logo} />
-                <AvatarFallback className="text-[10px]">
-                  {getUserInitials(post.postBusiness.name || "")}
-                </AvatarFallback>
-              </Avatar>
-            ) : (
-              <div className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground">
-                <UserRoundIcon className="size-4" />
-              </div>
-            )}
-            <span className="truncate text-sm font-medium">
-              {post.postBusiness.name}
-            </span>
-            {post.postBusiness.status === "verified" && (
-              <VerifiedIcon className="size-3.5 shrink-0 fill-blue-600 text-blue-600" />
-            )}
-          </Link>
+        <div className="space-y-1 px-0.5">
+          {/* Business name + likes count */}
+          <div className="flex items-center justify-between gap-2">
+            <Link
+              className="flex min-w-0 items-center gap-1.5"
+              href={`/b/${post.postBusiness.handle}`}
+            >
+              {post.postBusiness.logo ? (
+                <Avatar className="size-6 shrink-0">
+                  <AvatarImage src={post.postBusiness.logo} />
+                  <AvatarFallback className="text-[10px]">
+                    {getUserInitials(post.postBusiness.name || "")}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground">
+                  <UserRoundIcon className="size-4" />
+                </div>
+              )}
+              <span className="truncate text-sm font-medium">
+                {post.postBusiness.name}
+              </span>
+              {post.postBusiness.status === "verified" && (
+                <VerifiedIcon className="size-3.5 shrink-0 fill-blue-600 text-blue-600" />
+              )}
+            </Link>
 
-          <div className="flex shrink-0 items-center gap-1 text-muted-foreground text-sm">
-            <HeartIcon className="size-3.5" />
-            <span>{post.likesCount}</span>
+            <div className="flex shrink-0 items-center gap-1 text-muted-foreground text-sm">
+              <HeartIcon className="size-3.5" />
+              <span>{post.likesCount}</span>
+            </div>
           </div>
+
+          {/* Price */}
+          {post.price && (
+            <p className="text-sm font-normal text-muted-foreground">
+              {post.currency ? `${post.currency} ` : ""}
+              {formatPrice(post.price)}
+            </p>
+          )}
+
+          {/* One-line description */}
+          {post.content && (
+            <p className="line-clamp-1 w-[70%] text-sm font-normal text-muted-foreground">
+              {stripHtml(post.content)}
+            </p>
+          )}
         </div>
       )}
     </div>
