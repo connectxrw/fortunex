@@ -19,7 +19,8 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noArrayIndexKey": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -27,6 +28,9 @@
       "style": {
         "noNonNullAssertion": "off",
         "noNestedTernary": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
       }
     },
     "domains": {
