@@ -1,10 +1,9 @@
 import { fetchQuery } from "convex/nextjs";
 import { Suspense } from "react";
-import { PromptInputProvider } from "@/components/ai-elements/prompt-input";
 import Container from "@/components/custom/container";
 import { api } from "@/convex/_generated/api";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import { EditPostFormPage } from "@/features/workspace/post/edit-page";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import { EditPostFormPage } from "@/features/web/post/edit-page";
 import { getToken } from "@/lib/auth-server";
 
 export async function generateMetadata(props: PageProps<"/posts/edit/[slug]">) {
@@ -19,11 +18,12 @@ export async function generateMetadata(props: PageProps<"/posts/edit/[slug]">) {
     },
     { token: await getToken() },
   );
-  if (post === null)
+  if (post === null) {
     return {
       title: "Post Not Found",
       description: "Post Not Found",
     };
+  }
 
   return {
     title: post.title,
@@ -69,9 +69,7 @@ async function SuspendedEditPostPage(props: PageProps<"/posts/edit/[slug]">) {
   const { slug } = await props.params;
   return (
     <div className="flex items-center justify-center">
-      <PromptInputProvider>
-        <EditPostFormPage slug={slug} />
-      </PromptInputProvider>
+      <EditPostFormPage slug={slug} />
     </div>
   );
 }

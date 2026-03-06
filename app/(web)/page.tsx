@@ -2,12 +2,12 @@ import { fetchQuery } from "convex/nextjs";
 import { Suspense } from "react";
 import Container from "@/components/custom/container";
 import { api } from "@/convex/_generated/api";
-import { SearchTop } from "@/features/workspace/_shared/search";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import FilterBtns from "@/features/workspace/home/filters";
-import { NearMeFloatingButton } from "@/features/workspace/home/near-me-button";
-import HomePosts from "@/features/workspace/home/posts";
-import PostsSkeleton from "@/features/workspace/post/skeleton";
+import { SearchTop } from "@/features/web/_shared/search";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import FilterBtns from "@/features/web/home/filters";
+import { NearMeFloatingButton } from "@/features/web/home/near-me-button";
+import HomePosts from "@/features/web/home/posts";
+import PostsSkeleton from "@/features/web/post/skeleton";
 
 export async function generateMetadata(props: PageProps<"/">) {
   const slug = (await props.searchParams).post as string;

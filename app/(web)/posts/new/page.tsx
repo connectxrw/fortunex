@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { PromptInputProvider } from "@/components/ai-elements/prompt-input";
 import Container from "@/components/custom/container";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import { NewPostForm } from "@/features/workspace/post/new";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import { NewPostForm } from "@/features/web/post/new";
 
 export const metadata: Metadata = {
   title: "New Post",
@@ -16,13 +15,11 @@ export default function NewPostPage() {
       </div>
       <Container>
         <div className="flex items-center justify-center">
-          <PromptInputProvider>
-            <div className="w-full space-y-5 sm:max-w-md lg:max-w-xl 2xl:max-w-2xl">
-              <Suspense>
-                <NewPostForm />
-              </Suspense>
-            </div>
-          </PromptInputProvider>
+          <div className="w-full space-y-5 sm:max-w-md lg:max-w-xl 2xl:max-w-2xl">
+            <Suspense>
+              <NewPostForm />
+            </Suspense>
+          </div>
         </div>
       </Container>
     </div>

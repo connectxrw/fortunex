@@ -36,11 +36,11 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
-import { useFilters } from "@/lib/nuqs-params";
 import {
   NoBusinessAccount,
   NoBusinessAccountInfo,
-} from "../business/no-business";
+} from "@/features/web/business/no-business";
+import { useFilters } from "@/lib/nuqs-params";
 import { postFormSchema, type TPostFormSchema } from "./schema";
 import { SubcategoryChips } from "./subcategory-chips";
 

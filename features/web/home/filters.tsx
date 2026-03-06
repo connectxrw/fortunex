@@ -105,7 +105,6 @@ export default function FilterBtns({
                           : "rounded-full text-muted-foreground",
                       )}
                       onClick={() => handleCategoryClick(f.value)}
-                      // variant={active ? "default" : "ghost"}
                       variant={"ghost"}
                     >
                       <f.icon strokeWidth={2.2} />
@@ -159,31 +158,17 @@ export default function FilterBtns({
                       className="w-fit basis-auto pl-2"
                       key={sub.value}
                     >
-                      <button
-                        className={cn(
-                          "flex items-center justify-center gap-1 rounded-lg border px-3.5 py-1.5 text-sm transition-all",
-                          isActive
-                            ? "border-transparent bg-primary/15 font-medium"
-                            : "border-border bg-transparent text-primary hover:border-foreground/40 hover:text-foreground",
-                        )}
-                        onClick={() => handleSubcategoryClick(sub.value)}
-                        type="button"
+                      <Button
+                        onClick={() =>
+                          handleSubcategoryClick(isActive ? "" : sub.value)
+                        }
+                        size="sm"
+                        variant={isActive ? "default" : "outline"}
                       >
                         {sub.label}
 
-                        {isActive && (
-                          <button
-                            className="-mr-1"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSubcategoryClick("");
-                            }}
-                            type="button"
-                          >
-                            <XIcon size={13} />
-                          </button>
-                        )}
-                      </button>
+                        {isActive && <XIcon size={13} />}
+                      </Button>
                     </CarouselItem>
                   );
                 })}
