@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Container from "@/components/custom/container";
 import { SiteHeader } from "@/features/web/_shared/site-header";
+import ContactBusinessForm from "@/features/web/business/individual/contact-form";
 export const metadata: Metadata = {
   title: "Help Center",
 };
