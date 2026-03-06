@@ -27,7 +27,8 @@
       },
       "style": {
         "noNonNullAssertion": "off",
-        "noNestedTernary": "off"
+        "noNestedTernary": "off",
+        "useConsistentTypeDefinitions": "off"
       },
       "performance": {
         "noImgElement": "off"

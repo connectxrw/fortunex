@@ -1,6 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { subcategoryFilters } from "@/config/data";
-import { cn } from "@/lib/utils";
 
 export function SubcategoryChips({
   businessCategory,
@@ -26,19 +26,16 @@ export function SubcategoryChips({
       </div>
       <div className="flex flex-wrap gap-2">
         {subs.map((sub) => (
-          <button
-            className={cn(
-              "rounded-full border px-3 py-1 text-sm transition-colors",
-              value === sub.value
-                ? "border-foreground bg-foreground font-medium text-background"
-                : "border-border bg-muted text-muted-foreground hover:border-foreground/40 hover:text-foreground",
-            )}
+          <Button
+            className="rounded-full"
             key={sub.value}
             onClick={() => onChange(value === sub.value ? "" : sub.value)}
+            size={"sm"}
             type="button"
+            variant={value === sub.value ? "default" : "secondary"}
           >
             {sub.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
