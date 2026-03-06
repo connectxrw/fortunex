@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Container from "@/components/custom/container";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import Customize from "@/features/workspace/customize";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import Customize from "@/features/web/customize";
 
 export const metadata: Metadata = {
   title: "Customize",
