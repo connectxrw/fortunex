@@ -59,11 +59,11 @@ export default function WorkspacePage() {
           <SearchTop placeholder="Search..." />
         </SiteHeader>
       </div>
+      <Suspense>
+        <FilterBtns by="category" page="home" />
+      </Suspense>
       <Container className="pt-0 pb-10 md:pt-0">
         <div className="flex flex-col gap-3">
-          <Suspense>
-            <FilterBtns by="category" page="home" />
-          </Suspense>
           <Suspense fallback={<PostsSkeleton />}>
             <HomePosts />
           </Suspense>

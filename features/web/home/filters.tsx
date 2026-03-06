@@ -48,10 +48,12 @@ export default function FilterBtns({
     (by === "status" && status === value);
 
   return (
-    <div className={cn("-ml-3 w-full max-w-[100vw] overflow-hidden")}>
+    <div className={cn("w-full max-w-[100vw] overflow-hidden")}>
       {/* Main category row */}
       <div
-        className={cn("relative flex items-center justify-between border-b")}
+        className={cn(
+          "container relative flex items-center justify-between border-b",
+        )}
       >
         <Carousel
           className="flex w-full items-center gap-2 lg:gap-1"
@@ -136,7 +138,7 @@ export default function FilterBtns({
         {hasSubcategories && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="mt-4 overflow-hidden pb-1 pl-2"
+            className="container mt-4 overflow-hidden pb-1"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
@@ -162,7 +164,6 @@ export default function FilterBtns({
                         onClick={() =>
                           handleSubcategoryClick(isActive ? "" : sub.value)
                         }
-                        size="sm"
                         variant={isActive ? "default" : "outline"}
                       >
                         {sub.label}

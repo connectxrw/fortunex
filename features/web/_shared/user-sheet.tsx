@@ -41,6 +41,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
@@ -48,7 +49,6 @@ import { api } from "@/convex/_generated/api";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, getUserInitials } from "@/lib/utils";
 import { SelectAppearence } from "./appearence";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ADMIN_EMAIL = "connectxrw@gmail.com";
 
@@ -93,7 +93,7 @@ function NavLink({
     <Link
       className={cn(
         "flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors hover:bg-muted/70",
-        active && "bg-muted/70"
+        active && "bg-muted/70",
       )}
       href={href as Route}
       onClick={onClose}
@@ -236,11 +236,13 @@ export function UserMenuSheet() {
   if (user === undefined) {
     return <Skeleton className="block size-9 rounded-full" />;
   }
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   const trigger = (
-    <div className="bg-secondary rounded-full p-0.5 flex items-center justify-center gap-0 cursor-pointer">
-      <Button className="rounded-full size-7" size="icon" variant={"ghost"}>
+    <div className="flex cursor-pointer items-center justify-center gap-1 rounded-full bg-secondary p-0.5">
+      <Button className="size-7 rounded-full" size="icon" variant={"ghost"}>
         <MenuIcon />
       </Button>
       <Avatar className="size-7">
@@ -298,26 +300,26 @@ export function UserMenuSheet() {
 
       {isMobile ? (
         <Drawer onOpenChange={setOpen} open={open}>
-
           <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-          <DrawerContent className="px-4 pb-6 font-roboto z-[70]">
+          <DrawerContent className="z-70 px-4 pb-6 font-roboto">
             <DrawerHeader className="sr-only">
               <DrawerTitle>{siteConfig.name} Menu</DrawerTitle>
             </DrawerHeader>
-            <ScrollArea className="h-[52vh]">
-              {content}
-            </ScrollArea>
+            <ScrollArea className="h-[52vh]">{content}</ScrollArea>
           </DrawerContent>
         </Drawer>
       ) : (
         <Popover onOpenChange={setOpen} open={open}>
           <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-          <PopoverContent align="end" className="w-64 rounded-xl p-2 max-h-[86vh] overflow-y-auto" sideOffset={8}>
+          <PopoverContent
+            align="end"
+            className="no-scrollbar max-h-[86vh] w-64 overflow-y-auto rounded-xl p-2"
+            sideOffset={8}
+          >
             {content}
           </PopoverContent>
         </Popover>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }

@@ -24,7 +24,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] group-data-[size=sm]/card:px-3 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
         className,
       )}
       data-slot="card-header"
@@ -36,7 +36,10 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("font-semibold leading-none", className)}
+      className={cn(
+        "font-medium text-base leading-snug group-data-[size=sm]/card:text-sm",
+        className,
+      )}
       data-slot="card-title"
       {...props}
     />
@@ -69,23 +72,18 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("px-6", className)}
+      className={cn("px-4 group-data-[size=sm]/card:px-3", className)}
       data-slot="card-content"
       {...props}
     />
   );
 }
 
-function CardFooter({
-  className,
-  variant = "default",
-  ...props
-}: React.ComponentProps<"div"> & { variant?: "default" | "destructive" }) {
+function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
         "flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
-        variant === "destructive" && "bg-[#fff0f0] dark:bg-[#2A1314]",
         className,
       )}
       data-slot="card-footer"
