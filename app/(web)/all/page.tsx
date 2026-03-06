@@ -1,9 +1,9 @@
 import { BriefcaseBusinessIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Container from "@/components/custom/container";
-import { SearchTop } from "@/features/workspace/_shared/search";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import AllBusinesses from "@/features/workspace/business/admin/all-bsn";
+import { SearchTop } from "@/features/web/_shared/search";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import AllBusinesses from "@/features/web/business/admin/all-bsn";
 export const metadata: Metadata = {
   title: "All Businesses",
   description: "Manage your all businesses",

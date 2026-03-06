@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Container from "@/components/custom/container";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import { NotificationFilters } from "@/features/workspace/notifications/filters";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import { NotificationFilters } from "@/features/web/notifications/filters";
 import {
   NotificationsList,
   NotificationsListSkeleton,
-} from "@/features/workspace/notifications/list";
+} from "@/features/web/notifications/list";
 export const metadata: Metadata = {
   title: "Notifications",
   description: "Manage your notifications",
@@ -20,7 +20,7 @@ export default function NotificationsPage() {
       </div>
 
       <Container>
-        <Suspense fallback={<Skeleton className="h-12 w-[100px]" />}>
+        <Suspense fallback={<Skeleton className="h-12 w-25" />}>
           <NotificationFilters />
         </Suspense>
         <Suspense fallback={<NotificationsListSkeleton />}>

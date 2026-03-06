@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Container from "@/components/custom/container";
-import { SearchTop } from "@/features/workspace/_shared/search";
-import { SiteHeader } from "@/features/workspace/_shared/site-header";
-import FilterBtns from "@/features/workspace/home/filters";
-import SavedPosts from "@/features/workspace/saved";
+import { SearchTop } from "@/features/web/_shared/search";
+import { SiteHeader } from "@/features/web/_shared/site-header";
+import FilterBtns from "@/features/web/home/filters";
+import SavedPosts from "@/features/web/post/saved-posts";
 export const metadata: Metadata = {
   title: "Saved",
 };
-export default function WorkspaceSavedPage() {
+export default function webSavedPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="container sticky top-0 z-50 bg-background">
