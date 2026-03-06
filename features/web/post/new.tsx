@@ -9,7 +9,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -18,7 +23,6 @@ import {
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,15 +47,17 @@ import {
 import { useFilters } from "@/lib/nuqs-params";
 import { postFormSchema, type TPostFormSchema } from "./schema";
 import { SubcategoryChips } from "./subcategory-chips";
-
+import { Dropzone } from "@/components/custom/drop-zone";
+import { useUploadFile } from "@convex-dev/r2/react";
 export function NewPostForm() {
   const user = useQuery(api.auth.getCurrentUser);
   const business = useQuery(api.business.index.getMyBusiness);
   const router = useRouter();
   const newPost = useMutation(api.business.post.addNewPost);
   const [isDraft, setIsDraft] = useState(false);
-  // const uploadFile = useUploadFile(api.uploadFiles);
+  const uploadFile = useUploadFile(api.uploadFiles);
   const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
 
   const [{ preview }, setSearchParams] = useFilters();
   const form = useForm<TPostFormSchema>({
@@ -77,8 +83,7 @@ export function NewPostForm() {
           content: values.content || "",
           price: values.price || "",
           currency: values.currency || "",
-          images: [], // TODO: handle images in preview when attachments are added
-          // images: attachments.files.map((file) => file.url),
+          images: files.map((file) => URL.createObjectURL(file)),
           open: preview?.open,
         },
       });
@@ -86,7 +91,11 @@ export function NewPostForm() {
     // when attacmentis added
 
     return () => subscription.unsubscribe();
-  }, [form, setSearchParams, preview?.open]);
+  }, [form, setSearchParams, files, preview?.open]);
+
+  const handleFilesChange = (files: File[]) => {
+    setFiles(files);
+  };
 
   async function onSubmit(values: TPostFormSchema) {
     setIsLoading(true);
@@ -99,16 +108,13 @@ export function NewPostForm() {
       }
 
       // Validate attachments
-      // if (!attachments.files.length) {
-      //   toast.error("Please add post cover image.");
-      //   return;
-      // }
+      if (!files.length) {
+        toast.error("Please add post cover image.");
+        return;
+      }
 
       // Upload files
-      const fileKeys: string[] = [];
-      // const fileKeys = await Promise.all(
-      //   attachments.files.map((file) => uploadFile(file.file))
-      // );
+      const fileKeys = await Promise.all(files.map((file) => uploadFile(file)));
       // check if ctalink have https if not add it
       const ctaLink =
         values.ctaLink && !values.ctaLink.startsWith("https")
@@ -215,9 +221,7 @@ export function NewPostForm() {
 
           <Field>
             <FieldLabel htmlFor="form-post-price">Price (optional)</FieldLabel>
-            <FieldDescription>
-              Price of the product or service being advertised.
-            </FieldDescription>
+
             <div className="flex items-center gap-2">
               <Controller
                 control={form.control}
@@ -278,13 +282,10 @@ export function NewPostForm() {
                   className="min-h-24 resize-none"
                   disabled={isLoading}
                   id="form-post-description"
-                  placeholder="Type your post description here..."
+                  placeholder="Type here..."
                   rows={6}
                 />
 
-                <FieldDescription>
-                  Remember our community guidelines.
-                </FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -305,76 +306,87 @@ export function NewPostForm() {
             />
           )}
 
-          <FieldGroup>
-            <FieldSet>
-              <FieldLegend>Call to Action (Optional)</FieldLegend>
-              <FieldDescription>
-                Add call to action link to redirect users to after viewing the
-                post.
-              </FieldDescription>
-              <FieldGroup>
-                <Controller
-                  control={form.control}
-                  name="ctaLink"
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-post-referenceLink">
-                        Link
-                      </FieldLabel>
-                      <InputGroup>
-                        <InputGroupAddon className="">https://</InputGroupAddon>
-                        <InputGroupInput
+          <Accordion collapsible defaultValue="item-1" type="single">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>
+                <FieldLegend>Call to Action (Optional)</FieldLegend>
+              </AccordionTrigger>
+              <AccordionContent>
+                <FieldGroup>
+                  <Controller
+                    control={form.control}
+                    name="ctaLink"
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-post-referenceLink">
+                          Link
+                        </FieldLabel>
+                        <InputGroup>
+                          <InputGroupAddon className="">
+                            https://
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            {...field}
+                            aria-invalid={fieldState.invalid}
+                            autoComplete="off"
+                            disabled={isLoading}
+                            id="form-post-referenceLink"
+                            placeholder="example.com or wa.me/250799999999"
+                          />
+                        </InputGroup>
+
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="ctaLabel"
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-post-ctaLabel">
+                          Label
+                        </FieldLabel>
+                        <FieldDescription>
+                          Label for the call to action link.(eg. "Book Now")
+                        </FieldDescription>
+
+                        <Input
                           {...field}
                           aria-invalid={fieldState.invalid}
                           autoComplete="off"
                           disabled={isLoading}
-                          id="form-post-referenceLink"
-                          placeholder="example.com or wa.me/250799999999"
+                          id="form-post-ctaLabel"
+                          placeholder="Label"
                         />
-                      </InputGroup>
-
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </FieldGroup>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                <FieldLegend>Upload Cover Image</FieldLegend>
+              </AccordionTrigger>
+              <AccordionContent>
+                <Dropzone
+                  disabled={isLoading}
+                  helpText="Accepts images, videos, or 3D models"
+                  onFilesChange={handleFilesChange}
+                  selectButtonText="Select existing"
+                  uploadButtonText="Upload new"
                 />
-                <Controller
-                  control={form.control}
-                  name="ctaLabel"
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-post-ctaLabel">
-                        Label
-                      </FieldLabel>
-                      <FieldDescription>
-                        Label for the call to action link.(eg. "Book Now")
-                      </FieldDescription>
-
-                      <Input
-                        {...field}
-                        aria-invalid={fieldState.invalid}
-                        autoComplete="off"
-                        disabled={isLoading}
-                        id="form-post-ctaLabel"
-                        placeholder="Label"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
-          </FieldGroup>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </FieldGroup>
       </form>
-
-      <Field className="pt-8">
-        <FieldLabel htmlFor="file">Upload Cover Image</FieldLabel>
-        {/* add file upload */}
-      </Field>
 
       <div className="flex flex-wrap justify-end gap-2">
         <Button
