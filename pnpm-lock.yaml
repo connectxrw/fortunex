@@ -26,6 +26,9 @@ importers:
       '@convex-dev/resend':
         specifier: ^0.2.3
         version: 0.2.3(@react-email/render@2.0.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(convex-helpers@0.1.114(@standard-schema/spec@1.1.0)(convex@1.32.0(react@19.2.3))(hono@4.12.5)(react@19.2.3)(typescript@5.9.3)(zod@4.3.6))(convex@1.32.0(react@19.2.3))(react@19.2.3)
+      '@hookform/resolvers':
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.71.2(react@19.2.3))
       '@react-email/components':
         specifier: ^1.0.2
         version: 1.0.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -53,6 +56,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      input-otp:
+        specifier: ^1.4.2
+        version: 1.4.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       lucide-react:
         specifier: ^0.577.0
         version: 0.577.0(react@19.2.3)
@@ -74,6 +80,9 @@ importers:
       react-dom:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
+      react-hook-form:
+        specifier: ^7.71.2
+        version: 7.71.2(react@19.2.3)
       react-icons:
         specifier: ^5.6.0
         version: 5.6.0(react@19.2.3)
@@ -89,6 +98,9 @@ importers:
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.5
@@ -822,6 +834,11 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hookform/resolvers@5.2.2':
+    resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
+    peerDependencies:
+      react-hook-form: ^7.55.0
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2252,6 +2269,9 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
+  '@standard-schema/utils@0.3.0':
+    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+
   '@sveltejs/acorn-typescript@1.0.9':
     resolution: {integrity: sha512-lVJX6qEgs/4DOcRTpo56tmKzVPtoWAaVbL4hfO7t7NVwl9AAXzQR6cihesW1BmNMPl+bK6dreu2sOKBP2Q9CIA==}
     peerDependencies:
@@ -3134,6 +3154,12 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  input-otp@1.4.2:
+    resolution: {integrity: sha512-l3jWwYNvrEa6NTCt7BECfCm48GvwuZzkoeG3gBL2w4CHeOXW3eKFmf9UNYkNfYc3mxMrthMnxjIE07MT0zLBQA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+
   ip-address@10.1.0:
     resolution: {integrity: sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==}
     engines: {node: '>= 12'}
@@ -3740,6 +3766,12 @@ packages:
     resolution: {integrity: sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==}
     peerDependencies:
       react: ^19.2.3
+
+  react-hook-form@7.71.2:
+    resolution: {integrity: sha512-1CHvcDYzuRUNOflt4MOq3ZM46AronNJtQ1S7tnX6YN4y72qhgiUItpacZUAQ0TyWYci3yz1X+rXaSxiuEm86PA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
 
   react-icons@5.6.0:
     resolution: {integrity: sha512-RH93p5ki6LfOiIt0UtDyNg/cee+HLVR6cHHtW3wALfo+eOHTp8RnU2kRkI6E+H19zMIs03DyxUG/GfZMOGvmiA==}
@@ -5361,6 +5393,11 @@ snapshots:
     dependencies:
       hono: 4.12.5
 
+  '@hookform/resolvers@5.2.2(react-hook-form@7.71.2(react@19.2.3))':
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.71.2(react@19.2.3)
+
   '@img/colour@1.1.0':
     optional: true
 
@@ -6932,6 +6969,8 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@standard-schema/utils@0.3.0': {}
+
   '@sveltejs/acorn-typescript@1.0.9(acorn@8.16.0)':
     dependencies:
       acorn: 8.16.0
@@ -7715,6 +7754,11 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  input-otp@1.4.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
   ip-address@10.1.0: {}
 
   ipaddr.js@1.9.1: {}
@@ -8254,6 +8298,10 @@ snapshots:
     dependencies:
       react: 19.2.3
       scheduler: 0.27.0
+
+  react-hook-form@7.71.2(react@19.2.3):
+    dependencies:
+      react: 19.2.3
 
   react-icons@5.6.0(react@19.2.3):
     dependencies:
