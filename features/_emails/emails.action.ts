@@ -13,7 +13,6 @@ import { SubscribeEmail } from "./subscribe-email";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const ADMIN_EMAIL = "rathonrw@gmail.com";
-const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
 
 /* ---------------------------------------------
  * Helpers
@@ -35,7 +34,6 @@ export async function subscribe(formData: TSubFormSchema) {
 
     const contact = await resend.contacts.create({
       email,
-      audienceId: AUDIENCE_ID,
     });
 
     if (contact.error) {
