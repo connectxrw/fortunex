@@ -18,13 +18,13 @@ type PostWithMeta = Doc<"post"> & {
   likesCount: number;
 };
 
-function stripHtml(html: string) {
-  return html.replace(/<[^>]*>/g, "");
-}
+// function stripHtml(html: string) {
+//   return html.replace(/<[^>]*>/g, "");
+// }
 
 function formatPrice(price: string): string {
-  const num = parseFloat(price.replace(/,/g, ""));
-  return isNaN(num) ? price : num.toLocaleString();
+  const num = Number.parseFloat(price.replace(/,/g, ""));
+  return Number.isNaN(num) ? price : num.toLocaleString();
 }
 
 export function UnAuthPostCard({
@@ -60,7 +60,7 @@ export function UnAuthPostCard({
         {/* Hover overlay: gradient + title + more button */}
         <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between gap-2 p-3">
+          <div className="absolute right-0 bottom-0 left-0 flex items-end justify-between gap-2 p-3">
             <button
               className="pointer-events-auto line-clamp-2 text-left font-semibold text-sm text-white leading-snug"
               onClick={openPost}
@@ -96,7 +96,7 @@ export function UnAuthPostCard({
                   <UserRoundIcon className="size-4" />
                 </div>
               )}
-              <span className="truncate text-sm font-medium">
+              <span className="truncate font-medium text-sm">
                 {post.postBusiness.name}
               </span>
               {post.postBusiness.status === "verified" && (
@@ -112,18 +112,18 @@ export function UnAuthPostCard({
 
           {/* Price */}
           {post.price && (
-            <p className="text-sm font-normal text-muted-foreground">
+            <p className="text-right font-normal">
               {post.currency ? `${post.currency} ` : ""}
               {formatPrice(post.price)}
             </p>
           )}
 
           {/* One-line description */}
-          {post.content && (
+          {/* {post.content && (
             <p className="line-clamp-1 w-[70%] text-sm font-normal text-muted-foreground">
               {stripHtml(post.content)}
             </p>
-          )}
+          )} */}
         </div>
       )}
     </div>

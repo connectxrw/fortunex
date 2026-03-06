@@ -7,7 +7,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Separator } from "@/components/ui/separator";
 import { homeFilters, myPostFilters, subcategoryFilters } from "@/config/data";
 import { useFilters } from "@/lib/nuqs-params";
 import { useNearMe } from "@/lib/use-near-me";
@@ -127,9 +126,6 @@ export default function FilterBtns({
         {/* Near Me — desktop only, right side with separator */}
         {page === "home" && (
           <div className="hidden shrink-0 items-center gap-2 pb-1 pl-2 md:flex">
-            {category === "restaurant" && (
-              <Separator className="h-5 border-l" orientation="vertical" />
-            )}
             <NearMeButton />
           </div>
         )}
@@ -163,6 +159,7 @@ export default function FilterBtns({
                       key={sub.value}
                     >
                       <Button
+                        className="rounded-full"
                         onClick={() =>
                           handleSubcategoryClick(isActive ? "" : sub.value)
                         }

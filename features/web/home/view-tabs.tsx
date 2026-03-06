@@ -8,10 +8,10 @@ export function ViewTabs() {
   const [{ view }, setSearchParams] = useFilters();
 
   return (
-    <div className="flex gap-1 rounded-full bg-muted p-1 w-fit">
+    <div className="flex w-fit gap-1 rounded-full bg-muted p-1">
       <button
         className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors",
+          "flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-sm transition-colors",
           view === "products"
             ? "bg-background text-foreground shadow-sm"
             : "text-muted-foreground hover:text-foreground",
@@ -24,7 +24,7 @@ export function ViewTabs() {
       </button>
       <button
         className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors",
+          "flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-sm transition-colors",
           view === "merchants"
             ? "bg-background text-foreground shadow-sm"
             : "text-muted-foreground hover:text-foreground",

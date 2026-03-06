@@ -1,21 +1,21 @@
 "use client";
 
+import { useUploadFile } from "@convex-dev/r2/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { ConvexError } from "convex/values";
-import { TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { SmallDropzone } from "@/components/custom/drop-zone";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -44,8 +44,6 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { postFormSchema, type TPostFormSchema } from "./schema";
 import { SubcategoryChips } from "./subcategory-chips";
-import { useUploadFile } from "@convex-dev/r2/react";
-import { SmallDropzone } from "@/components/custom/drop-zone";
 
 export function EditPostForm({
   title,
@@ -291,7 +289,7 @@ export function EditPostForm({
               />
             )}
           />
-          <Accordion collapsible defaultValue="item-1" type="single">
+          <Accordion collapsible type="single">
             <AccordionItem value="item-1">
               <AccordionTrigger>
                 <FieldLegend>Call to Action (Optional)</FieldLegend>

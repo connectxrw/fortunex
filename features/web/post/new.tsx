@@ -1,5 +1,6 @@
 "use client";
 
+import { useUploadFile } from "@convex-dev/r2/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
@@ -9,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Dropzone } from "@/components/custom/drop-zone";
 import {
   Accordion,
   AccordionContent,
@@ -47,8 +49,6 @@ import {
 import { useFilters } from "@/lib/nuqs-params";
 import { postFormSchema, type TPostFormSchema } from "./schema";
 import { SubcategoryChips } from "./subcategory-chips";
-import { Dropzone } from "@/components/custom/drop-zone";
-import { useUploadFile } from "@convex-dev/r2/react";
 export function NewPostForm() {
   const user = useQuery(api.auth.getCurrentUser);
   const business = useQuery(api.business.index.getMyBusiness);
@@ -306,7 +306,7 @@ export function NewPostForm() {
             />
           )}
 
-          <Accordion collapsible defaultValue="item-1" type="single">
+          <Accordion collapsible type="single">
             <AccordionItem value="item-1">
               <AccordionTrigger>
                 <FieldLegend>Call to Action (Optional)</FieldLegend>
