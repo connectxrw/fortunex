@@ -116,6 +116,7 @@ export const searchPostsByVector = action({
         followersCount: number | undefined;
         logo: string | null;
       };
+      likesCount: number;
     })[] = await ctx.runAction(internal.ai.post.fetchAndFilterPosts, {
       results: filteredByScore.map((r) => ({ id: r._id, score: r._score })),
       businessId: args.businessId,

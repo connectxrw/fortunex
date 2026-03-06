@@ -103,7 +103,9 @@ function createErrorResponse(
 }
 
 function extractUserQuery(message: UIMessage): string {
-  if (!message.parts) return "";
+  if (!message.parts) {
+    return "";
+  }
 
   return message.parts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")

@@ -172,7 +172,7 @@ export const deletePost = mutation({
         await Promise.all(
           post.coverImageKeys.map(async (fileKey) => {
             await r2.deleteObject(ctx, fileKey);
-          })
+          }),
         );
       } catch (error) {
         console.error("Failed to delete image:", error);
@@ -242,7 +242,7 @@ export const deletePostImage = mutation({
     }
     await ctx.db.patch("post", args.postId, {
       coverImageKeys: post.coverImageKeys?.filter(
-        (key) => key !== args.imageKey
+        (key) => key !== args.imageKey,
       ),
       updatedAt: Date.now(),
     });
@@ -312,11 +312,13 @@ export const getPostsByBusinessHandle = query({
       .query("business")
       .withIndex("by_handle", (q) => q.eq("handle", args.handle))
       .first();
-    if (!business) return null;
+    if (!business) {
+      return null;
+    }
     const posts = await ctx.db
       .query("post")
       .withIndex("by_businessId_status", (q) =>
-        q.eq("businessId", business._id).eq("status", "published")
+        q.eq("businessId", business._id).eq("status", "published"),
       )
       .collect();
 
@@ -331,7 +333,7 @@ export const getPostsByBusinessHandle = query({
               key: fileKey,
               url: coverImageUrl,
             };
-          })
+          }),
         );
         const logo = business?.profileImageKey
           ? await r2.getUrl(business.profileImageKey, {
@@ -342,7 +344,7 @@ export const getPostsByBusinessHandle = query({
         const saved = await ctx.db
           .query("savedPosts")
           .withIndex("by_postId_userId", (q) =>
-            q.eq("postId", post._id).eq("userId", user._id)
+            q.eq("postId", post._id).eq("userId", user._id),
           )
           .first();
 
@@ -350,9 +352,16 @@ export const getPostsByBusinessHandle = query({
         const liked = await ctx.db
           .query("likedPosts")
           .withIndex("by_postId_userId", (q) =>
-            q.eq("postId", post._id).eq("userId", user._id)
+            q.eq("postId", post._id).eq("userId", user._id),
           )
           .first();
+
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
 
         const postBusiness = {
           name: business?.name,
@@ -369,8 +378,9 @@ export const getPostsByBusinessHandle = query({
           isMine: post.userId === user._id,
           saved: saved !== null,
           liked: liked !== null,
+          likesCount,
         };
-      })
+      }),
     );
     return postsWithCoverImageUrls;
   },

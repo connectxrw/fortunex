@@ -79,11 +79,19 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+function CardFooter({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"div"> & {
+  variant?: "default" | "destructive" | "outline";
+}) {
   return (
     <div
       className={cn(
         "flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
+        variant === "destructive" && "bg-[#fff0f0] dark:bg-[#2A1314]",
+        variant === "outline" && "border-0 bg-card dark:bg-transparent",
         className,
       )}
       data-slot="card-footer"

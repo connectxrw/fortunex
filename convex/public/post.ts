@@ -19,7 +19,7 @@ export const getUnAuthPosts = query({
         if (args.subcategory) {
           return q.and(
             categoryMatch,
-            q.eq(q.field("subcategory"), args.subcategory)
+            q.eq(q.field("subcategory"), args.subcategory),
           );
         }
         return categoryMatch;
@@ -38,7 +38,7 @@ export const getUnAuthPosts = query({
               key: fileKey,
               url: coverImageUrl,
             };
-          })
+          }),
         );
         const business = await ctx.db.get("business", post.businessId);
         const logo = business?.profileImageKey
@@ -70,7 +70,7 @@ export const getUnAuthPosts = query({
           postBusiness,
           likesCount,
         };
-      })
+      }),
     );
     return {
       ...posts,
@@ -87,7 +87,7 @@ export const searchUnAuthPosts = query({
     const posts = await ctx.db
       .query("post")
       .withSearchIndex("search_post", (q) =>
-        q.search("title", args.search).eq("status", "published")
+        q.search("title", args.search).eq("status", "published"),
       )
       .take(10);
 
@@ -102,7 +102,7 @@ export const searchUnAuthPosts = query({
               key: fileKey,
               url: coverImageUrl,
             };
-          })
+          }),
         );
         const business = await ctx.db.get("business", post.businessId);
         const logo = business?.profileImageKey
@@ -134,7 +134,7 @@ export const searchUnAuthPosts = query({
           postBusiness,
           likesCount,
         };
-      })
+      }),
     );
     return postsWithCoverImageUrls;
   },
@@ -149,7 +149,9 @@ export const getUnAuthPostBySlug = query({
       .query("post")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .first();
-    if (!post) return null;
+    if (!post) {
+      return null;
+    }
     const coverImages = await Promise.all(
       post.coverImageKeys.map(async (fileKey) => {
         const coverImageUrl = await r2.getUrl(fileKey, {
@@ -159,7 +161,7 @@ export const getUnAuthPostBySlug = query({
           key: fileKey,
           url: coverImageUrl,
         };
-      })
+      }),
     );
     const business = await ctx.db.get("business", post.businessId);
     const logo = business?.profileImageKey
@@ -202,7 +204,7 @@ export const getOtherBsnPosts = query({
     const posts = await ctx.db
       .query("post")
       .withIndex("by_businessId_status", (q) =>
-        q.eq("businessId", args.businessId).eq("status", "published")
+        q.eq("businessId", args.businessId).eq("status", "published"),
       )
       .order("desc")
       .paginate(args.paginationOpts);
@@ -218,7 +220,7 @@ export const getOtherBsnPosts = query({
               key: fileKey,
               url: coverImageUrl,
             };
-          })
+          }),
         );
         const business = await ctx.db.get("business", post.businessId);
         const logo = business?.profileImageKey
@@ -250,7 +252,7 @@ export const getOtherBsnPosts = query({
           postBusiness,
           likesCount,
         };
-      })
+      }),
     );
     return {
       ...posts,

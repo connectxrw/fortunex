@@ -15,7 +15,9 @@ export const getPostById = internalQuery({
   },
   handler: async (ctx, args) => {
     const post = await ctx.db.get("post", args.id);
-    if (!post) return null;
+    if (!post) {
+      return null;
+    }
     const coverImages = await Promise.all(
       post.coverImageKeys.map(async (fileKey) => {
         const coverImageUrl = await r2.getUrl(fileKey, {
@@ -34,6 +36,13 @@ export const getPostById = internalQuery({
         })
       : null;
 
+    const likesCount = (
+      await ctx.db
+        .query("likedPosts")
+        .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+        .collect()
+    ).length;
+
     const postBusiness = {
       name: business?.name,
       handle: business?.handle,
@@ -47,6 +56,7 @@ export const getPostById = internalQuery({
       ...post,
       coverImages,
       postBusiness,
+      likesCount,
     };
   },
 });
@@ -94,15 +104,20 @@ export const fetchAndFilterPosts = internalAction({
         followersCount: number | undefined;
         logo: string | null;
       };
+      likesCount: number;
     })[] = [];
     for (const result of args.results) {
       const post = await ctx.runQuery(internal.ai.post.getPostById, {
         id: result.id,
       });
-      if (!post) continue;
+      if (!post) {
+        continue;
+      }
 
       // Perform the 'AND' logic manually here
-      if (args.businessId && post.businessId !== args.businessId) continue;
+      if (args.businessId && post.businessId !== args.businessId) {
+        continue;
+      }
 
       posts.push({ ...post, score: result.score });
     }
