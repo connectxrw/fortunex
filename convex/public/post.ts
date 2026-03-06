@@ -47,6 +47,13 @@ export const getUnAuthPosts = query({
             })
           : null;
 
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
+
         const postBusiness = {
           name: business?.name,
           handle: business?.handle,
@@ -61,6 +68,7 @@ export const getUnAuthPosts = query({
           ...post,
           coverImages,
           postBusiness,
+          likesCount,
         };
       })
     );
@@ -103,6 +111,13 @@ export const searchUnAuthPosts = query({
             })
           : null;
 
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
+
         const postBusiness = {
           name: business?.name,
           handle: business?.handle,
@@ -117,6 +132,7 @@ export const searchUnAuthPosts = query({
           ...post,
           coverImages,
           postBusiness,
+          likesCount,
         };
       })
     );
@@ -152,6 +168,13 @@ export const getUnAuthPostBySlug = query({
         })
       : null;
 
+    const likesCount = (
+      await ctx.db
+        .query("likedPosts")
+        .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+        .collect()
+    ).length;
+
     const postBusiness = {
       name: business?.name,
       handle: business?.handle,
@@ -164,6 +187,7 @@ export const getUnAuthPostBySlug = query({
       ...post,
       coverImages,
       postBusiness,
+      likesCount,
     };
   },
 });
@@ -202,6 +226,13 @@ export const getOtherBsnPosts = query({
             })
           : null;
 
+        const likesCount = (
+          await ctx.db
+            .query("likedPosts")
+            .withIndex("by_postId_userId", (q) => q.eq("postId", post._id))
+            .collect()
+        ).length;
+
         const postBusiness = {
           name: business?.name,
           handle: business?.handle,
@@ -216,6 +247,7 @@ export const getOtherBsnPosts = query({
           ...post,
           coverImages,
           postBusiness,
+          likesCount,
         };
       })
     );

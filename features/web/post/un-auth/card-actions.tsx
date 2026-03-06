@@ -1,12 +1,13 @@
+"use client";
+
 import {
-  EllipsisVerticalIcon,
+  EllipsisIcon,
   FlagIcon,
   Redo2Icon,
   Share2Icon,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerButton,
@@ -28,14 +29,13 @@ import { useFilters } from "@/lib/nuqs-params";
 import type { TBusiness } from "@/types";
 import { ReportPostDialog } from "../report";
 
-export function UnAuthPostCardActions({
-  post,
-}: {
-  post: Doc<"post"> & {
-    coverImages: { key: string; url: string }[];
-    postBusiness: TBusiness;
-  };
-}) {
+type PostWithMeta = Doc<"post"> & {
+  coverImages: { key: string; url: string }[];
+  postBusiness: TBusiness;
+  likesCount: number;
+};
+
+export function UnAuthMoreButton({ post }: { post: PostWithMeta }) {
   const [{ post: currentPost }, setSearchParams] = useFilters();
   const [openReportDialog, setOpenReportDialog] = useState(false);
 
@@ -54,15 +54,16 @@ export function UnAuthPostCardActions({
 
   return (
     <>
+      {/* Desktop dropdown */}
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="hidden rounded-full lg:flex"
-            size="icon-sm"
-            variant="ghost"
+          <button
+            aria-label="More options"
+            className="hidden lg:flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            type="button"
           >
-            <EllipsisVerticalIcon />
-          </Button>
+            <EllipsisIcon className="size-4" />
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52" side="right">
           <DropdownMenuGroup>
@@ -76,13 +77,10 @@ export function UnAuthPostCardActions({
               <Redo2Icon className="rotate-180" />
               <span>{currentPost === post.slug ? "Close" : "Open"}</span>
             </DropdownMenuItem>
-
-            {/* share */}
             <DropdownMenuItem onClick={handleShare}>
               <Share2Icon />
               <span>Share</span>
             </DropdownMenuItem>
-            {/* report */}
             <DropdownMenuItem onClick={() => setOpenReportDialog(true)}>
               <FlagIcon />
               <span>Report</span>
@@ -91,15 +89,16 @@ export function UnAuthPostCardActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Mobile drawer */}
       <Drawer>
         <DrawerTrigger asChild>
-          <Button
-            className="rounded-full lg:hidden"
-            size="icon-sm"
-            variant="ghost"
+          <button
+            aria-label="More options"
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-colors hover:bg-black/60"
+            type="button"
           >
-            <EllipsisVerticalIcon />
-          </Button>
+            <EllipsisIcon className="size-4" />
+          </button>
         </DrawerTrigger>
         <DrawerContent className="rounded-t-md!">
           <DrawerHeader className="sr-only">
@@ -116,14 +115,12 @@ export function UnAuthPostCardActions({
                   : setSearchParams({ post: post.slug })
               }
             />
-
             <DrawerButton
               icon={<Share2Icon className="size-4" />}
               label="Share"
               onClick={handleShare}
             />
           </div>
-
           <div className="flex flex-col gap-4 p-4">
             <DrawerButton
               icon={<FlagIcon className="size-4" />}
