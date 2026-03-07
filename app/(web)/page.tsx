@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { SearchTop } from "@/features/web/_shared/search";
 import { SiteHeader } from "@/features/web/_shared/site-header";
 import FilterBtns from "@/features/web/home/filters";
-import { NearMeFloatingButton } from "@/features/web/home/near-me-button";
+// import { NearMeFloatingButton } from "@/features/web/home/near-me-button";
 import HomePosts from "@/features/web/home/posts";
 import { ViewTabs } from "@/features/web/home/view-tabs";
 import PostsSkeleton from "@/features/web/post/skeleton";
@@ -73,9 +73,9 @@ export default function WorkspacePage() {
           <HomePosts />
         </Suspense>
       </Container>
-      <Suspense>
+      {/* <Suspense>
         <NearMeFloatingButton />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
