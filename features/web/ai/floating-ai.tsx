@@ -113,7 +113,9 @@ function SearchAIInput() {
   };
 
   useEffect(() => {
-    if (isLoading) document.getElementById("nd-ai-input")?.focus();
+    if (isLoading) {
+      document.getElementById("nd-ai-input")?.focus();
+    }
   }, [isLoading]);
 
   return (
@@ -193,10 +195,14 @@ function List(
   }, [props.messagecount]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+      return;
+    }
     function callback() {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container) {
+        return;
+      }
 
       // Only auto-scroll if user hasn't manually scrolled up
       if (!isUserScrollingRef.current) {
@@ -224,7 +230,9 @@ function List(
   // Track when user manually scrolls
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
@@ -282,7 +290,9 @@ export function FloatingAIChat() {
     window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
   }, []);
-  if (pathname.endsWith("/chat")) return null;
+  if (pathname.endsWith("/chat")) {
+    return null;
+  }
 
   return (
     <Context value={{ chat, ai, setSearchParams }}>
@@ -323,7 +333,7 @@ export function FloatingAIChat() {
                     Sign in to continue using the AI chat
                   </p>
                 </div>
-                <Button className="rounded-full" size="lg">
+                <Button asChild className="rounded-full" size="lg">
                   <Link href="/login">Sign in</Link>
                 </Button>
               </div>
