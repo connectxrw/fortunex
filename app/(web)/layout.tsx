@@ -15,7 +15,9 @@ export default function Layout(props: LayoutProps<"/">) {
         <Suspense>
           <FloatingAIChat />
         </Suspense>
-        <MobileFloatingAIChat />
+        <Suspense>
+          <MobileFloatingAIChat />
+        </Suspense>
 
         <SiteFooter />
       </div>

@@ -53,7 +53,7 @@ export default function FilterBtns({
       {/* Main category row */}
       <div
         className={cn(
-          "container relative flex items-center justify-between border-b",
+          "relative flex items-center justify-between border-b md:px-2 md:pr-6",
         )}
       >
         <Carousel
