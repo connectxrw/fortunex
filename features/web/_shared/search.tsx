@@ -83,7 +83,7 @@ export function Search({ placeholder }: { placeholder?: string }) {
 
 export function SearchSkeleton({ placeholder }: { placeholder?: string }) {
   return (
-    <InputGroup className="mx-auto min-h-10 w-full max-w-xl rounded-full bg-background shadow-none 2xl:max-w-2xl dark:bg-background">
+    <InputGroup className="mx-auto hidden min-h-10 w-full max-w-xl rounded-full bg-background shadow-none md:flex 2xl:max-w-2xl dark:bg-background">
       <InputGroupInput placeholder={placeholder ? placeholder : "Search..."} />
       <InputGroupAddon>
         <LoaderIcon className="animate-spin" />

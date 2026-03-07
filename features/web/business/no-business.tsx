@@ -26,7 +26,7 @@ export function NoBusinessAccount() {
       <EmptyContent>
         <Button asChild className="rounded-full">
           <Link href="/profile#change-account-type">
-            Change to Personal Account
+            Change to Business Account
           </Link>
         </Button>
       </EmptyContent>
