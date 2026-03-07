@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import SiteFooter from "@/features/web/_shared/site-footer";
-import { FloatingAIChat } from "@/features/web/ai/floating-ai";
+import {
+  FloatingAIChat,
+  MobileFloatingAIChat,
+} from "@/features/web/ai/floating-ai";
 import Panel from "@/features/web/panel";
 import PreviewPost from "@/features/web/preview";
 
@@ -12,6 +15,8 @@ export default function Layout(props: LayoutProps<"/">) {
         <Suspense>
           <FloatingAIChat />
         </Suspense>
+        <MobileFloatingAIChat />
+
         <SiteFooter />
       </div>
       <Suspense>

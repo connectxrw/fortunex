@@ -27,17 +27,9 @@ const VALID_CATEGORIES = [
   "restaurant",
   "house",
   "tourism",
-  "healthcare",
   "shop",
   "entertainment",
-  "education",
-  "technology",
-  "sports",
-  "agriculture",
-  "real estate",
-  "startup",
   "jobs",
-  "media",
 ] as const;
 
 // SYSTEM PROMPT

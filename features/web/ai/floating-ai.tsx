@@ -6,6 +6,7 @@ import { DefaultChatTransport, type FileUIPart } from "ai";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import {
   CopyIcon,
+  MessageCircleIcon,
   RefreshCcwIcon,
   ShareIcon,
   ThumbsDownIcon,
@@ -515,5 +516,21 @@ function ChatMessages({
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>
+  );
+}
+
+export function MobileFloatingAIChat() {
+  const [{ ai }, setSearchParams] = useFilters();
+  return (
+    <Button
+      className={cn(
+        "fixed right-4 bottom-6 z-50 size-11 rounded-full",
+        ai ? "hidden" : "md:hidden",
+      )}
+      onClick={() => setSearchParams({ ai: !ai })}
+      size="icon-lg"
+    >
+      <MessageCircleIcon className="size-5" />
+    </Button>
   );
 }
