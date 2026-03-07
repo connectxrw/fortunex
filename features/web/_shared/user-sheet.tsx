@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -236,8 +236,12 @@ export function UserMenuSheet() {
   if (user === undefined) {
     return <Skeleton className="block size-9 rounded-full" />;
   }
+
   if (!user) {
-    return null;
+    redirect("/login");
+  }
+  if (!user.username) {
+    redirect("/onboarding");
   }
 
   const trigger = (
